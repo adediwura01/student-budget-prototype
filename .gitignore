@@ -7,10 +7,40 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Frontend dependencies and generated output
 node_modules
 dist
 dist-ssr
 *.local
+coverage/
+.vite/
+
+# Python environments and generated files
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local environment configuration; sanitized examples remain trackable
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local database files and backups (not migration source files)
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+pgdata/
+backups/
 
 # Editor directories and files
 .vscode/*
