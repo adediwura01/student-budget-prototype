@@ -7,12 +7,14 @@ import { createDashboardWorkspace } from './demo/dashboard'
 import { addTransaction, deleteTransaction, updateTransaction, workspaceMonths } from './finance/workspace'
 import { confirmPlan, removePlan, undoPlanConfirmation, upsertPlan } from './finance/plans'
 import { selectDashboard, transactionCsv } from './finance/dashboard'
+import { downloadFile } from './utils/download'
 import { destinationFromHash } from './navigation'
 import Dashboard from './pages/Dashboard'
 import SectionPage from './pages/SectionPage'
 import Transactions from './pages/Transactions'
 import Budgets from './pages/Budgets'
 import FinancialPlanning from './pages/FinancialPlanning'
+import Reports from './pages/Reports'
 import './App.css'
 
 function App() {
@@ -46,17 +48,22 @@ function App() {
     setNotification({ id: ++toastId.current, title, message, tone })
   }
 
-  function exportCsv() {
-    const blob = new Blob([`\uFEFF${transactionCsv(dashboard.transactions)}`], { type: 'text/csv;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `finset-${dashboard.month}-transactions.csv`
-    document.body.append(link)
-    link.click()
-    link.remove()
-    URL.revokeObjectURL(url)
-    notify('Export ready', `${dashboard.transactions.length} confirmed transactions from ${dashboard.monthLabel} were downloaded as CSV.`)
+  function exportCsv(rows, filename, periodLabel) {
+    const blob = new Blob([`\uFEFF${transactionCsv(rows)}`], { type: 'text/csv;charset=utf-8' })
+    downloadFile(blob, filename)
+    notify('Export ready', `${rows.length} confirmed transactions from ${periodLabel} were downloaded as CSV.`)
+  }
+
+  async function exportPdf(report) {
+    try {
+      const { downloadFinancialStatement } = await import('./utils/financialStatement.js')
+      await downloadFinancialStatement(report)
+      notify('PDF export ready', `Financial Statement for ${report.range.label} prepared with ${report.summary.count} confirmed transactions. Your PDF download has started.`)
+    } catch (error) {
+      notify('PDF export failed', error?.code === 'FINSET_PDF_UNSUPPORTED_TEXT'
+        ? 'Some transaction text cannot be rendered in the PDF font. Use CSV to export these records without losing text.'
+        : 'The financial statement could not be prepared or downloaded. Please try again.', 'danger')
+    }
   }
 
   function addTransactionRecord(record) {
@@ -98,7 +105,8 @@ function App() {
       notifications={dashboard.notifications} onAppearanceChange={setAppearance}
       onPreferences={() => setDialog('preferences')} onNotify={notify}>
       {destination.id === 'dashboard'
-        ? <Dashboard dashboard={dashboard} month={month} months={months} onMonthChange={setMonth} onExport={exportCsv} />
+        ? <Dashboard dashboard={dashboard} month={month} months={months} onMonthChange={setMonth}
+            onExport={() => exportCsv(dashboard.transactions, `finset-${dashboard.month}-transactions.csv`, dashboard.monthLabel)} />
         : destination.id === 'transactions'
           ? <Transactions
               workspace={activeWorkspace}
@@ -128,7 +136,11 @@ function App() {
                   onPlanUndo={undoPlanRecord}
                   onNotify={notify}
                 />
-              : <SectionPage destination={destination} />}
+              : destination.id === 'reports'
+                ? <Reports workspace={activeWorkspace}
+                    onExportPdf={exportPdf}
+                    onExport={(report) => exportCsv(report.transactions, `finset-${report.range.from}-to-${report.range.to}-transactions.csv`, report.range.label)} />
+                : <SectionPage destination={destination} />}
     </AppLayout>
     {dialog === 'preferences' && <WorkspacePreferences name={workspaceName} appearance={appearance}
       onAppearanceChange={setAppearance} onClose={() => setDialog(null)}
