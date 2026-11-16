@@ -1,14 +1,17 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { destinations } from '../navigation'
 import Icon from './Icon'
 import Brand from './Brand'
 import Avatar from './ui/Avatar'
 import Button from './ui/Button'
 import Dropdown from './ui/Dropdown'
+import MobileNavigationDrawer from './MobileNavigationDrawer'
 
 export default function AppLayout({ children, destination, workspaceName, appearance, notifications = [], onAppearanceChange, onPreferences, onNotify }) {
   const mainRef = useRef(null)
   const previousRoute = useRef(destination.id)
+  const navigationTriggerRef = useRef(null)
+  const [navigationOpen, setNavigationOpen] = useState(false)
   const modes = [{ id: 'light', label: 'Light', icon: 'sun' },
     { id: 'dark', label: 'Dark', icon: 'moon' },
     { id: 'system', label: 'System', icon: 'system' }]
@@ -55,7 +58,11 @@ export default function AppLayout({ children, destination, workspaceName, appear
     </aside>
     <div className="workspace">
       <header className="topbar">
-        <div className="breadcrumb"><span>Workspace</span><Icon name="chevron-right" size={12} /><strong>{destination.label}</strong></div>
+        <div className="topbar-location">
+          <Button ref={navigationTriggerRef} variant="icon" icon="menu" className="mobile-navigation-toggle" aria-label="Open navigation" aria-haspopup="dialog" aria-expanded={navigationOpen} aria-controls="mobile-navigation-drawer" onClick={() => setNavigationOpen(true)} />
+          <span className="mobile-header-brand">FinSet</span>
+          <div className="breadcrumb"><span>Workspace</span><Icon name="chevron-right" size={12} /><strong>{destination.label}</strong></div>
+        </div>
         <div className="topbar-actions">
           <Dropdown label="Change appearance" icon={modes.find((mode) => mode.id === appearance).icon}
             triggerContent={<span className="appearance-trigger-label">{modes.find((mode) => mode.id === appearance).label}</span>}
@@ -73,10 +80,6 @@ export default function AppLayout({ children, destination, workspaceName, appear
         <footer className="app-footer"><span>FinSet. Money, made clear.</span><span><i /> Demo data <span className="footer-separator">/</span> NGN</span></footer>
       </main>
     </div>
-    <nav className="bottom-navigation" aria-label="Mobile primary navigation">
-      {destinations.map((item) => <a key={item.id} href={`#/${item.id}`} aria-label={item.label} className={destination.id === item.id ? 'is-active' : ''} aria-current={destination.id === item.id ? 'page' : undefined}>
-        <Icon name={item.icon} size={20} /><span>{item.mobileLabel}</span>
-      </a>)}
-    </nav>
+    <MobileNavigationDrawer open={navigationOpen} onOpenChange={setNavigationOpen} destination={destination} triggerRef={navigationTriggerRef} mainRef={mainRef} />
   </div>
 }

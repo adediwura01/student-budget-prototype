@@ -2,7 +2,7 @@ const icons = new Set(['transactions', 'budget', 'planning', 'report', 'settings
   'chevron', 'chevron-right', 'check', 'more', 'close', 'plus', 'info', 'arrow', 'bell', 'wallet', 'profile', 'refresh', 'alert',
   'basket', 'bus-front', 'book', 'bag', 'cash-coin', 'receipt', 'calendar3', 'clock', 'download', 'search', 'arrow-up', 'arrow-down', 'piggy-bank'])
 const aliases = { dashboard: 'grid', logo: 'grid', calendar: 'calendar3', balance: 'wallet', savings: 'piggy-bank',
-  success: 'check', error: 'alert', warning: 'alert', help: 'info', display: 'system', menu: 'more',
+  success: 'check', error: 'alert', warning: 'alert', help: 'info', display: 'system', menu: 'list',
   food: 'basket', transport: 'bus-front', income: 'cash-coin', expense: 'receipt', week: 'calendar3' }
 
 export default function Icon({ name, size = 20, className = '' }) {
