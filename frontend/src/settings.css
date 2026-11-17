@@ -1,0 +1,285 @@
+.settings-page {
+  display: grid;
+  gap: var(--space-5);
+  max-inline-size: 1000px;
+  min-inline-size: 0;
+}
+
+.settings-page .ui-card-header {
+  align-items: start;
+  margin-block-end: var(--space-5);
+}
+
+.settings-page .ui-card-title {
+  font-size: var(--font-size-lg);
+}
+
+.settings-page .ui-card-actions {
+  min-inline-size: 0;
+}
+
+.settings-page .ui-badge {
+  white-space: normal;
+  text-align: start;
+}
+
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-block-end: var(--space-5);
+}
+
+.settings-profile > div {
+  min-inline-size: 0;
+}
+
+.settings-profile h3 {
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: break-word;
+}
+
+.settings-profile p {
+  margin-block-start: var(--space-1);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.settings-account-details {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+}
+
+.settings-account-details dt {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.settings-account-details dd {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.5;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding-block: var(--space-4);
+  border-block-start: 1px solid var(--border);
+}
+
+.settings-row-copy {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.settings-row-copy h3 {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-strong);
+  line-height: 1.45;
+}
+
+.settings-row-copy p {
+  margin-block-start: var(--space-1);
+  max-inline-size: 68ch;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.settings-workspace-row > .ui-button {
+  flex-shrink: 0;
+}
+
+.settings-row-copy .settings-workspace-name {
+  color: var(--text-primary);
+  overflow-wrap: break-word;
+}
+
+.settings-note,
+.settings-appearance-status {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  line-height: 1.65;
+}
+
+.settings-note {
+  margin-block-start: var(--space-3);
+}
+
+.settings-appearance-options {
+  max-inline-size: 520px;
+}
+
+.settings-appearance-options .appearance-selector label {
+  padding: var(--space-3);
+}
+
+.settings-appearance-options .appearance-choice-name {
+  font-size: var(--font-size-sm);
+}
+
+.settings-appearance-options .appearance-choice-name .icon {
+  inline-size: 15px;
+  block-size: 15px;
+}
+
+.settings-appearance-status {
+  margin-block-start: var(--space-4);
+  color: var(--text-secondary);
+}
+
+.settings-currency {
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  background: var(--surface-raised);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.settings-week-control {
+  flex: 0 0 180px;
+}
+
+.settings-notification-row:first-child,
+.settings-security-row:first-child {
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+
+.settings-notification-row > .settings-switch {
+  flex: 0 0 60px;
+  inline-size: 60px;
+  min-block-size: var(--control-height);
+  padding: var(--space-2);
+}
+
+.settings-switch-track {
+  display: inline-flex;
+  align-items: center;
+  inline-size: 40px;
+  block-size: 24px;
+  padding: 3px;
+  border-radius: 20px;
+  background: var(--text-muted);
+  transition: background var(--transition-fast);
+}
+
+.settings-switch-track > span {
+  inline-size: 18px;
+  block-size: 18px;
+  border-radius: 50%;
+  background: var(--surface);
+  transition: transform var(--transition-fast);
+}
+
+.settings-switch[aria-checked='true'] .settings-switch-track {
+  background: var(--brand);
+}
+
+.settings-switch[aria-checked='true'] .settings-switch-track > span {
+  transform: translateX(16px);
+  background: var(--on-brand);
+}
+
+.settings-security-row {
+  align-items: start;
+}
+
+.settings-security-row > .ui-badge {
+  flex-shrink: 0;
+  margin-block-start: var(--space-1);
+}
+
+.settings-defaults {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: var(--space-2) var(--space-1);
+}
+
+.settings-defaults > .ui-button {
+  flex-shrink: 0;
+}
+
+.settings-restore-description {
+  margin-block-end: var(--space-6);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .settings-page .ui-card-header {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .settings-page .ui-card-heading {
+    flex-basis: 100%;
+  }
+
+  .settings-account-details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+
+  .settings-workspace-row,
+  .settings-week-row,
+  .settings-defaults {
+    align-items: start;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .settings-workspace-row > .ui-button,
+  .settings-week-control,
+  .settings-defaults > .ui-button {
+    inline-size: 100%;
+  }
+
+  .settings-week-control {
+    flex-basis: auto;
+  }
+
+  .settings-appearance-options .appearance-selector label {
+    padding: var(--space-2) var(--space-1);
+  }
+
+  .settings-appearance-options .appearance-choice-name {
+    font-size: var(--font-size-xs);
+  }
+
+  .settings-appearance-options .appearance-choice-name .icon {
+    inline-size: 12px;
+    block-size: 12px;
+  }
+
+  .settings-row {
+    gap: var(--space-3);
+  }
+
+  .settings-security-row {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .settings-security-row > .ui-badge {
+    margin-block-start: 0;
+  }
+}

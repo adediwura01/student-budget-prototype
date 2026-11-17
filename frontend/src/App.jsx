@@ -15,6 +15,8 @@ import Transactions from './pages/Transactions'
 import Budgets from './pages/Budgets'
 import FinancialPlanning from './pages/FinancialPlanning'
 import Reports from './pages/Reports'
+import Settings from './pages/Settings'
+import { createSettingsPreferences, selectSettingsNotifications, updateSettingsPreference } from './utils/settingsPreferences'
 import './App.css'
 
 function App() {
@@ -25,16 +27,18 @@ function App() {
   const [notification, setNotification] = useState(null)
   const [month, setMonth] = useState(() => workspace.asOf.slice(0, 7))
   const toastId = useRef(0)
-  const { appearance, setAppearance } = useAppearance()
+  const { appearance, resolvedTheme, persistent: appearancePersistent, setAppearance } = useAppearance()
+  const [preferences, setPreferences] = useState(() => createSettingsPreferences(workspace.profile.weekStart))
   const [transactions, setTransactions] = useState(workspace.transactions)
   const [budgets, setBudgets] = useState(workspace.monthlyBudgets)
   const [plans, setPlans] = useState(workspace.plans)
   const activeWorkspace = useMemo(
-    () => ({ ...workspace, transactions, monthlyBudgets: budgets, plans }),
-    [workspace, transactions, budgets, plans],
+    () => ({ ...workspace, profile: { ...workspace.profile, weekStart: preferences.weekStart }, transactions, monthlyBudgets: budgets, plans }),
+    [workspace, transactions, budgets, plans, preferences.weekStart],
   )
   const months = useMemo(() => workspaceMonths(activeWorkspace), [activeWorkspace])
   const dashboard = useMemo(() => selectDashboard(activeWorkspace, month), [activeWorkspace, month])
+  const notifications = useMemo(() => selectSettingsNotifications(activeWorkspace, dashboard, preferences), [activeWorkspace, dashboard, preferences])
 
   useEffect(() => {
     const navigate = () => {
@@ -46,6 +50,18 @@ function App() {
 
   function notify(title, message, tone = 'success') {
     setNotification({ id: ++toastId.current, title, message, tone })
+  }
+
+  function changePreference(key, value) {
+    setPreferences((current) => updateSettingsPreference(current, key, value))
+  }
+
+  function restorePreferenceDefaults() {
+    setPreferences(createSettingsPreferences())
+    const saved = setAppearance('light')
+    notify('Preferences restored', saved
+      ? 'Appearance was saved in this browser. Session preferences were reset; your workspace label and financial records were not changed.'
+      : 'Preferences were reset for this session. Browser storage is unavailable; your workspace label and financial records were not changed.')
   }
 
   function exportCsv(rows, filename, periodLabel) {
@@ -102,7 +118,7 @@ function App() {
 
   return <>
     <AppLayout destination={destination} workspaceName={workspaceName} appearance={appearance}
-      notifications={dashboard.notifications} onAppearanceChange={setAppearance}
+      notifications={notifications} onAppearanceChange={setAppearance}
       onPreferences={() => setDialog('preferences')} onNotify={notify}>
       {destination.id === 'dashboard'
         ? <Dashboard dashboard={dashboard} month={month} months={months} onMonthChange={setMonth}
@@ -140,7 +156,11 @@ function App() {
                 ? <Reports workspace={activeWorkspace}
                     onExportPdf={exportPdf}
                     onExport={(report) => exportCsv(report.transactions, `finset-${report.range.from}-to-${report.range.to}-transactions.csv`, report.range.label)} />
-                : <SectionPage destination={destination} />}
+                : destination.id === 'settings'
+                  ? <Settings workspace={activeWorkspace} workspaceName={workspaceName} appearance={appearance} resolvedTheme={resolvedTheme}
+                      appearancePersistent={appearancePersistent} preferences={preferences} onAppearanceChange={setAppearance}
+                      onPreferenceChange={changePreference} onEditWorkspace={() => setDialog('preferences')} onRestoreDefaults={restorePreferenceDefaults} />
+                  : <SectionPage destination={destination} />}
     </AppLayout>
     {dialog === 'preferences' && <WorkspacePreferences name={workspaceName} appearance={appearance}
       onAppearanceChange={setAppearance} onClose={() => setDialog(null)}

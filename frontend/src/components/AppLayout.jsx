@@ -29,7 +29,7 @@ export default function AppLayout({ children, destination, workspaceName, appear
     id: item.id,
     label: item.title,
     description: item.message,
-    icon: 'alert',
+    icon: item.icon ?? 'alert',
     onSelect: () => onNotify(item.title, item.message),
   }))
 
@@ -68,9 +68,9 @@ export default function AppLayout({ children, destination, workspaceName, appear
             triggerContent={<span className="appearance-trigger-label">{modes.find((mode) => mode.id === appearance).label}</span>}
             items={modes.map((mode) => ({ ...mode, checked: appearance === mode.id, onSelect: () => onAppearanceChange(mode.id) }))} />
           {notificationItems.length > 0
-            ? <Dropdown label="Budget notifications" icon="bell" items={notificationItems}
+            ? <Dropdown label="In-app notifications" icon="bell" items={notificationItems}
               triggerContent={<span className="notification-count">{notificationItems.length}</span>} />
-            : <Button variant="icon" icon="bell" aria-label="No budget notifications" title="No budget notifications" disabled />}
+            : <Button variant="icon" icon="bell" aria-label="No in-app notifications" title="No in-app notifications" disabled />}
           <span className="topbar-divider" />
           <Button variant="icon" className="topbar-avatar" aria-label="Edit workspace preferences" title="Workspace preferences" onClick={onPreferences}><Avatar name={workspaceName} initials="FW" size="sm" /></Button>
         </div>
